@@ -1,13 +1,5 @@
 import { joinRoom } from "https://esm.run/trystero";
 
-const chatView = document.getElementById("chatView");
-const joinView = document.getElementById("joinView");
-const chat = document.getElementById("chat");
-const form = document.getElementById("messageForm");
-const messageText = document.getElementById("messageText");
-const joinForm = document.getElementById("joinForm");
-const roomId = document.getElementById("roomId");
-
 let room;
 let message;
 
@@ -15,38 +7,36 @@ function addMessage(message) {
   const msg = document.createElement("div");
   msg.classList.add("message");
   msg.classList.add(message.type);
-  msg.innerText = message.user + ": " + message.text;
-  chat.appendChild(msg);
-  chat.scrollTop = chat.scrollHeight;
+  if (message.user) msg.innerText = message.user + ": " + message.text;
+  else msg.innerText = message.text;
+
+  document.getElementById("chat").appendChild(msg);
+  document.getElementById("chat").scrollTop =
+    document.getElementById("chat").scrollHeight;
 }
 
 async function updateInfo() {
   const roomSelf = await room.getSelf();
   const roomUsers = await room.getUsers();
-  document.getElementById("infoRoomId").innerText =
-    `Room ID: ${roomSelf.roomId}`;
-  document.getElementById("infoUserId").innerText =
-    `User ID: ${roomSelf.userId}`;
-  document.getElementById("infoUsers").innerText =
-    `Users: ${Object.keys(roomUsers).length + 1}`;
+  document.getElementById("info").innerText =
+    `Room ID: ${roomSelf.roomId}\nYour ID: ${roomSelf.userId}\nUsers: ${Object.keys(roomUsers).length + 1}`;
 }
 
 function openRoom(id) {
   room = joinRoom({ appId: "chat.ttomf.cc", identity: "none" }, id);
 
   room.onUserJoin(({ userId }) => {
-    addMessage({ type: "info", user: userId, text: `joined` });
+    addMessage({ type: "info", text: `${userId} joined` });
     updateInfo();
   });
   room.onUserLeave(({ userId }) => {
-    addMessage({ type: "info", user: userId, text: `left` });
+    addMessage({ type: "info", text: `${userId} left` });
     updateInfo();
   });
   room.onError((err) => {
     addMessage({
       type: "error",
-      user: "Error",
-      text: `${err.code} ${err.message}`,
+      text: `Error: ${err.code} ${err.message}`,
     });
     updateInfo();
   });
@@ -57,40 +47,38 @@ function openRoom(id) {
     addMessage({ type: "msg", user: userId, text: data.text });
   });
 
-  chatView.hidden = false;
-  joinView.hidden = true;
-
-  messageText.focus();
+  document.getElementById("messageText").focus();
+  addMessage({ type: "info", text: `Connected to room ${id}` });
   updateInfo();
 }
 
 function sendMessage(text) {
+  if (!message) {
+    addMessage({ type: "error", text: "No room connected" });
+    return;
+  }
   message.send({ text: text });
   addMessage({ type: "you", user: "You", text: text });
 }
 
-if (window.location.hash) {
-  openRoom(window.location.hash.slice(1));
-}
-
-form.addEventListener("submit", (event) => {
+document.getElementById("messageForm").addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const text = messageText.value.trim();
+  const text = document.getElementById("messageText").value.trim();
 
   if (!text) return;
 
+  document.getElementById("messageText").value = "";
   sendMessage(text);
-  messageText.value = "";
 });
 
-joinForm.addEventListener("submit", (event) => {
+document.getElementById("joinForm").addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const text = roomId.value.trim();
+  const text = document.getElementById("roomId").value.trim();
 
   if (!text) return;
 
-  window.location.hash = text;
-  openRoom(window.location.hash.slice(1));
+  openRoom(text);
+  document.getElementById("roomId").value = "";
 });
