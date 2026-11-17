@@ -1,4 +1,5 @@
 :root {
+    color-scheme: light;
     --muted: lightgray;
     --surface: white;
     --text: black;
@@ -12,6 +13,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
+        color-scheme: dark;
         --muted: DarkSlateGray;
         --surface: black;
         --text: lightgray;
@@ -180,4 +182,22 @@ h3 {
 
 .user {
     font-weight: bold;
+}
+
+@media (max-width: 800px) {
+    body {
+        flex-direction: column;
+    }
+    aside {
+        flex: 0 1 auto;
+        max-height: 45dvh;
+    }
+    main {
+        flex: 1;
+        width: auto;
+        min-height: 0;
+    }
+    #messageText {
+        min-width: 0;
+    }
 }
