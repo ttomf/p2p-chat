@@ -3,6 +3,8 @@
 Simple peer-to-peer chat running entirely in the browser.
 No backend, no accounts, no stored messages.
 
+Try it here: [chat.ttomf.cc](https://chat.ttomf.cc).
+
 ## Features
 
 - Rooms identified with room ID
