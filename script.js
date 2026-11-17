@@ -26,15 +26,22 @@ Your username: ${user.get().name}
 Users: ${Object.keys(roomUsers).length + 1}`;
 }
 
-function openRoom(id) {
+async function openRoom(id) {
+  room?.leave();
   room = joinRoom({ appId: "chat.ttomf.cc", identity: "none" }, id);
 
   room.onUserJoin(({ userId }) => {
-    addMessage({ type: "info", text: `${userId} joined` });
+    addMessage({
+      type: "info",
+      text: `${user.get(userId).name ?? userId} joined`,
+    });
     updateInfo();
   });
   room.onUserLeave(({ userId }) => {
-    addMessage({ type: "info", text: `${userId} left` });
+    addMessage({
+      type: "info",
+      text: `${user.get(userId).name ?? userId} left`,
+    });
     updateInfo();
   });
   room.onError((err) => {
@@ -48,7 +55,11 @@ function openRoom(id) {
   message = room.makeAction("message");
 
   message.onMessage((data, { userId }) => {
-    addMessage({ type: "msg", user: user.get(userId).name, text: data.text });
+    addMessage({
+      type: "msg",
+      user: user.get(userId).name ?? userId,
+      text: data.text,
+    });
   });
 
   user = room.makeUserState("user", {
@@ -56,8 +67,8 @@ function openRoom(id) {
   });
 
   if (document.getElementById("username").value.trim())
-    user.set({ name: document.getElementById("username").value.trim() });
-  else user.set({ name: `User ${Math.floor(Math.random() * 1000)}` });
+    await user.set({ name: document.getElementById("username").value.trim() });
+  else await user.set({ name: `User ${Math.floor(Math.random() * 1000)}` });
 
   document.getElementById("messageText").focus();
   addMessage({ type: "info", text: `Connected to room ${id}` });
@@ -93,16 +104,5 @@ document.getElementById("joinForm").addEventListener("submit", (event) => {
 
   openRoom(text);
   document.getElementById("roomId").value = "";
-});
-
-document.getElementById("userForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const text = document.getElementById("username").value.trim();
-
-  if (!text) return;
-
-  user.set({ name: text });
   document.getElementById("username").value = "";
-  updateInfo();
 });

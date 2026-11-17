@@ -14,7 +14,7 @@
                 Simple peer-to-peer chat without a backend. All messages are
                 sent directly, and are not stored anywhere.
             </p>
-            <p>Enter room ID to join:</p>
+            <h3>Join room</h3>
             <form id="joinForm">
                 <input
                     type="text"
@@ -24,19 +24,13 @@
                     required
                     autofocus
                 />
-                <button type="submit">Join</button>
-            </form>
-            <p>Change username:</p>
-            <form id="userForm">
                 <input
                     type="text"
                     id="username"
-                    placeholder="New username..."
+                    placeholder="Username..."
                     autocomplete="off"
-                    required
-                    autofocus
                 />
-                <button type="submit">Change</button>
+                <button type="submit">Join</button>
             </form>
             <p id="info"></p>
         </aside>
