@@ -11,16 +11,10 @@
         <aside>
             <h1>P2P chat</h1>
             <p>
-                Simple peer-to-peer chat, without a backend. All connections are
-                initialized encrypted with
-                <a href="https://trystero.dev">Trystero</a>. Messages are sent
-                directly between peers and are not stored on any server.
+                Simple peer-to-peer chat without a backend. All messages are
+                sent directly, and are not stored anywhere.
             </p>
-            <p>
-                Start by entering a room ID below. Share the same ID with others
-                to start chatting. Anyone with the room ID can join the
-                conversation.
-            </p>
+            <p>Enter room ID to join:</p>
             <form id="joinForm">
                 <input
                     type="text"
@@ -31,6 +25,18 @@
                     autofocus
                 />
                 <button type="submit">Join</button>
+            </form>
+            <p>Change username:</p>
+            <form id="userForm">
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="New username..."
+                    autocomplete="off"
+                    required
+                    autofocus
+                />
+                <button type="submit">Change</button>
             </form>
             <p id="info"></p>
         </aside>

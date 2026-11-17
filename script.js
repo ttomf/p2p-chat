@@ -2,6 +2,7 @@ import { joinRoom } from "https://esm.run/trystero";
 
 let room;
 let message;
+let user;
 
 function addMessage(message) {
   const msg = document.createElement("div");
@@ -18,8 +19,11 @@ function addMessage(message) {
 async function updateInfo() {
   const roomSelf = await room.getSelf();
   const roomUsers = await room.getUsers();
-  document.getElementById("info").innerText =
-    `Room ID: ${roomSelf.roomId}\nYour ID: ${roomSelf.userId}\nUsers: ${Object.keys(roomUsers).length + 1}`;
+  document.getElementById("info").innerText = `\
+Room ID: ${roomSelf.roomId}
+Your ID: ${roomSelf.userId}
+Your username: ${user.get().name}
+Users: ${Object.keys(roomUsers).length + 1}`;
 }
 
 function openRoom(id) {
@@ -44,8 +48,16 @@ function openRoom(id) {
   message = room.makeAction("message");
 
   message.onMessage((data, { userId }) => {
-    addMessage({ type: "msg", user: userId, text: data.text });
+    addMessage({ type: "msg", user: user.get(userId).name, text: data.text });
   });
+
+  user = room.makeUserState("user", {
+    name: "anonymous",
+  });
+
+  if (document.getElementById("username").value.trim())
+    user.set({ name: document.getElementById("username").value.trim() });
+  else user.set({ name: `User ${Math.floor(Math.random() * 1000)}` });
 
   document.getElementById("messageText").focus();
   addMessage({ type: "info", text: `Connected to room ${id}` });
@@ -58,7 +70,7 @@ function sendMessage(text) {
     return;
   }
   message.send({ text: text });
-  addMessage({ type: "you", user: "You", text: text });
+  addMessage({ type: "you", user: user.get().name, text: text });
 }
 
 document.getElementById("messageForm").addEventListener("submit", (event) => {
@@ -81,4 +93,16 @@ document.getElementById("joinForm").addEventListener("submit", (event) => {
 
   openRoom(text);
   document.getElementById("roomId").value = "";
+});
+
+document.getElementById("userForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const text = document.getElementById("username").value.trim();
+
+  if (!text) return;
+
+  user.set({ name: text });
+  document.getElementById("username").value = "";
+  updateInfo();
 });
