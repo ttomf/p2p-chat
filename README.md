@@ -1,23 +1,16 @@
 # P2P chat
 
-Simple peer-to-peer chat running entirely in the browser.
-No backend, no accounts, no stored messages.
+Simple peer-to-peer chat running in the browser, without a custom backend or accounts.
+Messages are sent directly between peers using WebRTC.
 
 Try it here: [chat.ttomf.cc](https://chat.ttomf.cc).
 
-## Features
-
-- Rooms identified with room ID
-- Optional username
-- Messages sent directly between peer
-- See room info and connected users
-
 ## How it works
 
-Plain HTML, CSS, and JavaScript with no build step.
-[Trystero](https://trystero.dev) handles signaling and peer discovery.
-After that, messages are sent directly between browsers.
-Messages exist only in the open page, so there is no history.
+The page is built using HTML, CSS and JavaScript.
+[Trystero](https://trystero.dev) handles peer discovery, signaling and message exchange.
+
+Messages are not stored by the application, so reloading the page will erase them.
 
 ## Run locally
 
@@ -26,16 +19,17 @@ python -m http.server 8000
 ```
 
 Then open http://localhost:8000.
-An internet connection is required to load Trystero and reach the signaling relays.
+An internet connection is required for peer discovery and communication.
 
 ## Usage
 
-1. Enter a room ID and optionally a username, then click **Join**
-2. Share the room ID, everyone can chat
-3. Join another room or rejoin with changed username
+Enter a room ID and optionally a username, then click **Join**.
+You can then send messages to other peers in the room.
+
+You can join another room or rejoin the same room with a different username.
 
 ## Limitations
 
 - All peers must be online at the same time
 - No message history or offline delivery
-- Everyone can join any room
+- Anyone who knows the room ID can join
