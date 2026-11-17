@@ -3,26 +3,47 @@
 }
 
 [hidden] {
-    display: none;
+    display: none !important;
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     height: 100dvh;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
-    font-family: sans;
+    font-family: sans-serif;
     background-color: #eee;
 }
 
 main {
     display: flex;
-    flex-direction: column;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
     max-width: 800px;
     margin: 0 auto;
+}
+
+#chatView {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) minmax(0, 800px) minmax(
+            150px,
+            1fr
+        );
+    column-gap: 16px;
+    max-width: none;
+    align-items: stretch;
+}
+
+#joinView {
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
+    padding: 16px;
+    overflow-y: auto;
 }
 
 button {
@@ -49,16 +70,38 @@ input {
 }
 
 input:focus {
-    outline: none;
+    outline: 2px solid #77f;
+    outline-offset: -2px;
 }
 
 h1 {
     margin: 0;
+    text-align: center;
+}
+
+p {
+    margin: 0;
+}
+
+aside {
+    grid-column: 1;
+    justify-self: end;
+    padding: 16px;
+    overflow-wrap: anywhere;
+}
+
+article {
+    display: flex;
+    grid-column: 2;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
 }
 
 #chat {
     flex: 1;
-    overflow-y: scroll;
+    min-height: 0;
+    overflow-y: auto;
     padding: 16px;
     display: flex;
     flex-direction: column;
@@ -70,17 +113,18 @@ h1 {
     display: flex;
     gap: 8px;
     padding: 16px;
-    border-top: 1px solid #ddd;
     width: 100%;
 }
 
 #messageText {
     flex: 1;
+    min-width: 0;
 }
 
 .message {
     padding: 8px;
     border-radius: 8px;
+    overflow-wrap: anywhere;
 }
 
 .message.info {
@@ -97,4 +141,27 @@ h1 {
 
 .message.you {
     background-color: #bbf;
+}
+
+@media (max-width: 900px) {
+    #chatView {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        column-gap: 0;
+    }
+
+    aside {
+        grid-column: 1;
+        justify-self: center;
+        width: 100%;
+        max-width: 800px;
+        padding: 8px 16px;
+    }
+
+    article {
+        grid-column: 1;
+        justify-self: center;
+        width: 100%;
+        max-width: 800px;
+    }
 }

@@ -20,22 +20,36 @@ function addMessage(message) {
   chat.scrollTop = chat.scrollHeight;
 }
 
-function openRoom(id) {
-  room = joinRoom({ appId: "chat.ttomf.cc" }, id);
+async function updateInfo() {
+  const roomSelf = await room.getSelf();
+  const roomUsers = await room.getUsers();
+  document.getElementById("infoRoomId").innerText =
+    `Room ID: ${roomSelf.roomId}`;
+  document.getElementById("infoUserId").innerText =
+    `User ID: ${roomSelf.userId}`;
+  document.getElementById("infoUsers").innerText =
+    `Users: ${Object.keys(roomUsers).length + 1}`;
+}
 
-  room.onUserJoin(({ userId }) =>
-    addMessage({ type: "info", user: userId, text: `joined` }),
-  );
-  room.onUserLeave(({ userId }) =>
-    addMessage({ type: "info", user: userId, text: `left` }),
-  );
-  room.onError((err) =>
+function openRoom(id) {
+  room = joinRoom({ appId: "chat.ttomf.cc", identity: "none" }, id);
+
+  room.onUserJoin(({ userId }) => {
+    addMessage({ type: "info", user: userId, text: `joined` });
+    updateInfo();
+  });
+  room.onUserLeave(({ userId }) => {
+    addMessage({ type: "info", user: userId, text: `left` });
+    updateInfo();
+  });
+  room.onError((err) => {
     addMessage({
       type: "error",
       user: "Error",
       text: `${err.code} ${err.message}`,
-    }),
-  );
+    });
+    updateInfo();
+  });
 
   message = room.makeAction("message");
 
@@ -47,6 +61,7 @@ function openRoom(id) {
   joinView.hidden = true;
 
   messageText.focus();
+  updateInfo();
 }
 
 function sendMessage(text) {

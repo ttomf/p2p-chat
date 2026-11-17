@@ -8,21 +8,28 @@
         <script type="module" src="script.js"></script>
     </head>
     <body>
+        <h1>P2P chat</h1>
         <main id="chatView" hidden>
-            <article id="chat"></article>
-            <form id="messageForm">
-                <input
-                    type="text"
-                    id="messageText"
-                    placeholder="Your message..."
-                    autocomplete="off"
-                    required
-                />
-                <button type="submit">Send</button>
-            </form>
+            <aside>
+                <p id="infoRoomId"></p>
+                <p id="infoUserId"></p>
+                <p id="infoUsers"></p>
+            </aside>
+            <article>
+                <div id="chat"></div>
+                <form id="messageForm">
+                    <input
+                        type="text"
+                        id="messageText"
+                        placeholder="Your message..."
+                        autocomplete="off"
+                        required
+                    />
+                    <button type="submit">Send</button>
+                </form>
+            </article>
         </main>
         <main id="joinView">
-            <h1>P2P chat</h1>
             <p>
                 Simple peer-to-peer chat, without a backend. All connections are
                 initialized encrypted with
