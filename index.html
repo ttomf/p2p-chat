@@ -9,12 +9,14 @@
     </head>
     <body>
         <main>
-            <article id="messages"></article>
+            <article id="chat"></article>
             <form id="messageForm">
                 <input
                     type="text"
                     id="messageText"
                     placeholder="Your message..."
+                    autocomplete="off"
+                    required
                     autofocus
                 />
                 <button type="submit">Send</button>
