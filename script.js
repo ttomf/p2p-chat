@@ -8,8 +8,29 @@ function addMessage(message) {
   const msg = document.createElement("div");
   msg.classList.add("message");
   msg.classList.add(message.type);
-  if (message.user) msg.innerText = message.user + ": " + message.text;
-  else msg.innerText = message.text;
+
+  if (message.type == "msg" || message.type == "you") {
+    const meta = document.createElement("span");
+    meta.classList.add("meta");
+
+    const time = document.createElement("span");
+    time.textContent = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const name = document.createElement("span");
+    name.textContent = message.user;
+    name.classList.add("user");
+
+    const text = document.createElement("span");
+    text.textContent = message.text;
+
+    meta.append(name, time);
+    msg.append(meta, text);
+  } else {
+    msg.innerText = message.text;
+  }
 
   document.getElementById("chat").appendChild(msg);
   document.getElementById("chat").scrollTop =
